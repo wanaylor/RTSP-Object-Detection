@@ -1,0 +1,16 @@
+version: '2.4'
+services:
+  rtsp-object-detection:
+    container_name: rtsp-object-detection
+    restart: unless-stopped
+    command: python3 /RTSP-Object-Detection/stream.py --fps 10 --image_width 1920 --image_height 1080 --port 8554 --stream_uri /video_stream
+    image: rtsp-object-detection:latest
+    ports:
+      - 8554:8554 # RTSP
+    volumes:
+      - .:/RTSP-Object-Detection
+    environment:
+      - UPSTREAM_IP=192.168.1.240
+      - UPSTREAM_PORT=8554
+      - UPSTREAM_ROUTE=garage-floodlight
+    working_dir: /RTSP-Object-Detection

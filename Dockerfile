@@ -25,7 +25,3 @@ RUN python3 -m pip install --no-cache-dir openvino
 
 # nncf for model optimization
 RUN python3 -m pip install --no-cache-dir nncf
-
-ENV UPSTREAM_IP=IP
-ENV UPSTREAM_PORT=PORT
-ENV UPSTREAM_ROUTE=ROUTE
