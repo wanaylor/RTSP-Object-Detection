@@ -25,3 +25,6 @@ RUN python3 -m pip install --no-cache-dir openvino
 
 # nncf for model optimization
 RUN python3 -m pip install --no-cache-dir nncf
+
+# ultralytics for the model
+RUN python3 -m pip install --no-cache-dir ultralytics
