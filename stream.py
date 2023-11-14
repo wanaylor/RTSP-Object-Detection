@@ -15,7 +15,6 @@ from time import time
 import os
 #from YOLOInference import YoloInference
 from YOLOV8Inference import YOLOV8Inference
-from utils.YOLOV8Utils import YOLOV8Utils as y8
 
 # import required library like Gstreamer and GstreamerRtspServer
 gi.require_version('Gst', '1.0')
@@ -102,6 +101,7 @@ parser.add_argument("--port", default=8554, help="port to stream video", type = 
 parser.add_argument("--stream_uri", default = "/video_stream", help="rtsp video stream uri")
 opt = parser.parse_args()
 if not os.path.exists('./models/yolov8n.onnx'):
+    from utils.YOLOV8Utils import YOLOV8Utils as y8
     print(f'model ./models/yolov8n.onnx does not exist')
     y8.download(target_path='./models/yolov8n.onnx')
 

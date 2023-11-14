@@ -1,6 +1,5 @@
-__pycache__/*
 models/*
 root/person/*
-__pycache__/*
+**/__pycache__/**
 *.pyc
 *.DS_Store

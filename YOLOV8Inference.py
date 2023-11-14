@@ -36,6 +36,7 @@ class YOLOV8Inference(object):
         self.rng = np.random.default_rng(3)
         self.colors = self.rng.uniform(0, 255, size=(len(self.class_names), 3))
 
+
     def __call__(self, frame):
         #pdb.set_trace()
         converted = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -44,8 +45,17 @@ class YOLOV8Inference(object):
         return self.detect_objects(self.image)
 
     def initialize_model(self, path):
+
+        # Onnx session
         self.session = onnxruntime.InferenceSession(path,
                                                     providers=onnxruntime.get_available_providers())
+
+        # OpenVino inference request
+        core = ov.Core()
+        model = core.read_model(model='./models/yolov8n.xml', weights='./models/yolov8n.bin')
+        compiled_model = core.compile_model(model, "CPU")
+        self.infer_request = compiled_model.create_infer_request()
+
         # Get model info
         self.get_input_details()
         self.get_output_details()
@@ -53,6 +63,8 @@ class YOLOV8Inference(object):
 
     def detect_objects(self, image):
         input_tensor = self.prepare_input(image)
+
+
 
         # Perform inference on the image
         outputs = self.inference(input_tensor)
@@ -79,7 +91,14 @@ class YOLOV8Inference(object):
 
     def inference(self, input_tensor):
         start = time.perf_counter()
-        outputs = self.session.run(self.output_names, {self.input_names[0]: input_tensor})
+        # Onnx session
+        #outputs = self.session.run(self.output_names, {self.input_names[0]: input_tensor})
+
+        # OpenVino Inference
+        self.infer_request.set_input_tensor(ov.Tensor(input_tensor))
+        self.infer_request.infer()
+        pdb.set_trace()
+        outputs = [self.infer_request.get_output_tensor(i).data for i in range(1)]
 
         # print(f"Inference time: {(time.perf_counter() - start)*1000:.2f} ms")
         return outputs
