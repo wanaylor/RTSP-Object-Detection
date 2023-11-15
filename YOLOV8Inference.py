@@ -92,13 +92,14 @@ class YOLOV8Inference(object):
     def inference(self, input_tensor):
         start = time.perf_counter()
         # Onnx session
-        #outputs = self.session.run(self.output_names, {self.input_names[0]: input_tensor})
+        #onnx_outputs = self.session.run(self.output_names, {self.input_names[0]: input_tensor})
 
         # OpenVino Inference
         self.infer_request.set_input_tensor(ov.Tensor(input_tensor))
         self.infer_request.infer()
-        pdb.set_trace()
-        outputs = [self.infer_request.get_output_tensor(i).data for i in range(1)]
+        #pdb.set_trace()
+        outputs = [np.array(self.infer_request.get_output_tensor().data)]
+        #outputs = [self.infer_request.get_output_tensor(i).data for i in range(1)]
 
         # print(f"Inference time: {(time.perf_counter() - start)*1000:.2f} ms")
         return outputs
