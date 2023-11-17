@@ -1,11 +1,11 @@
 import os
 import shutil
 from ultralytics import YOLO
-import onnx
+#import onnx
 import openvino as ov
-import torch
-from torchvision import datasets, transforms
-import nncf
+#import torch
+#from torchvision import datasets, transforms
+#import nncf
 
 class YOLOV8Utils():
 
@@ -14,13 +14,13 @@ class YOLOV8Utils():
         print('Downloading YOLOV8...')
         # Load a model
         model = YOLO("yolov8n.yaml")  # build a new model from scratch
-        model = YOLO("yolov8n.pt")  # load a pretrained model (recommended for training)
+        model = YOLO("yolov8s.pt")  # load a pretrained model (recommended for training)
 
         # Use the model
         print(f'saving yolov8 to {target_path}')
-        path = model.export(format="onnx")  # export the model to ONNX format
-        shutil.move(path, target_path)
-        os.remove('./yolov8n.pt') 
+        path = model.export(format="openvino", int8=True, data='./data.yml')  # export the model to ONNX format
+        #shutil.move(path, target_path)
+        #os.remove('./yolov8n.pt') 
         return None
 
     @classmethod

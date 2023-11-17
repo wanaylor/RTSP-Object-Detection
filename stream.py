@@ -55,7 +55,7 @@ class SensorFactory(GstRtspServer.RTSPMediaFactory):
                 self.model(frame)
                 frame = self.model.draw_detections()
                 end = time()
-                print(f'inference took: {end-start}s')
+                print(f'model eval took: {end-start}s')
                 frame = cv2.resize(frame, (opt.image_width, opt.image_height), \
                     interpolation = cv2.INTER_LINEAR)
                 data = frame.tostring()

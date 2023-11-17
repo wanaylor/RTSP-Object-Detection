@@ -52,7 +52,7 @@ class YOLOV8Inference(object):
 
         # OpenVino inference request
         core = ov.Core()
-        model = core.read_model(model='./models/yolov8n.xml', weights='./models/yolov8n.bin')
+        model = core.read_model(model='./yolov8n_int8_openvino_model/yolov8n.xml', weights='./yolov8n_int8_openvino_model/yolov8n.bin')
         compiled_model = core.compile_model(model, "CPU")
         self.infer_request = compiled_model.create_infer_request()
 
@@ -92,11 +92,17 @@ class YOLOV8Inference(object):
     def inference(self, input_tensor):
         start = time.perf_counter()
         # Onnx session
-        #onnx_outputs = self.session.run(self.output_names, {self.input_names[0]: input_tensor})
+        #outputs = self.session.run(self.output_names, {self.input_names[0]: input_tensor})
 
         # OpenVino Inference
+        start = time.time()
         self.infer_request.set_input_tensor(ov.Tensor(input_tensor))
+        end = time.time()
+        print(f'Setting input tensor took {end-start}s')
+        start = time.time()
         self.infer_request.infer()
+        end = time.time()
+        print(f'Inference took {end-start}s')
         #pdb.set_trace()
         outputs = [np.array(self.infer_request.get_output_tensor().data)]
         #outputs = [self.infer_request.get_output_tensor(i).data for i in range(1)]

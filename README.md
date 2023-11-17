@@ -20,3 +20,10 @@ Or remove the -d flag to attach to the stdout and ensure the stream is running
 Open a network stream in VLC with the IP of your host system `rtsp://192.168.1.100:8554/video_stream`
 
 The video_sream endpoint can be modified in the docker-compose file.
+
+## Manually Downloading the YOLOV8s INT8 model
+```
+from ultralytics import YOLO
+model = YOLO('yolov8s.pt')
+path = model.export(format="openvino", int8=True, data='coco8.yaml') 
+```
